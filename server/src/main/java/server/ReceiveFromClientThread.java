@@ -1,6 +1,5 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -14,32 +13,33 @@ public class ReceiveFromClientThread implements Runnable {
 
     private PrintWriter print ;
 
-    public static Logger LOGGER = Logger.getLogger( ReceiveFromClientThread.class.getName() );
-    Socket client_socket = null;
+    private static final Logger LOGGER = Logger.getLogger( ReceiveFromClientThread.class.getName() );
+    private final Socket clientSocket;
 
     /**
      * constructor
      *
-     * @param client_socket
+     * @param clientSocket
      */
-    public ReceiveFromClientThread( Socket client_socket )
+    public ReceiveFromClientThread( Socket clientSocket )
     {
         LOGGER.info( "Logger Name: " + LOGGER.getName() );
-        this.client_socket = client_socket;
+        this.clientSocket = clientSocket;
     }
 
     public void run() {
         try {
 
-            while ( true ) {
-                this.print = new PrintWriter( client_socket.getOutputStream(), true );
-                this.print.println( "Mir ist langweilig ..." );
-                this.print.flush();
-            }
-            this.client_socket.close();
+            this.print = new PrintWriter( clientSocket.getOutputStream(), true );
+            this.print.println( "Mir ist langweilig ..." );
+            this.print.flush();
+            this.clientSocket.close();
             System.exit( 0 );
-        } catch ( IOException e ) {
+
+        }
+        catch ( IOException e ) {
             e.printStackTrace();
+            System.exit( 1 );
         }
 
     }

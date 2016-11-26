@@ -19,13 +19,14 @@ public class Server {
     public Server(Integer port) throws IOException {
 
         LOGGER.info( "Logger Name: " + LOGGER.getName() );
-        System.out.println( "Server waiting for connection on port " + port );
+        LOGGER.debug( "Server waiting for connection on port %d", port );
+
         ServerSocket server_socket = new ServerSocket( port );
         Socket client_socket = server_socket.accept();
-        System.out.println( "Received connection from " + client_socket.getInetAddress() + " on port " + client_socket.getPort() );
-
+        LOGGER.debug( String.format( "Received connection from %s on port %d", client_socket.getInetAddress(), client_socket.getPort() ));
         //create two threads to send and receive from client
         ReceiveFromClientThread receive = new ReceiveFromClientThread( client_socket );
+
         Thread thread = new Thread( receive );
         thread.start();
         SendToClientThread send = new SendToClientThread( client_socket );
